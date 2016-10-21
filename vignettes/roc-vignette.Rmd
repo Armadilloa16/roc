@@ -1,0 +1,46 @@
+---
+title: "ROC"
+author: "Lyron Winderbaum"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{ROC}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, echo = FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
+library(roc)
+```
+
+This document should provide a brief overview of how to generate and plot
+receiver operating characteristic (ROC) curves and cost functions using 
+the `roc` package. To do this I'll use a subset of Fisher's (Anderson's)
+iris data to illustrate:
+
+```{r}
+y       = subset(iris, Species != "virginica")$Sepal.Width
+classes = subset(iris, Species != "virginica")$Species == "setosa"
+```
+
+Note that `y` could be any numeric predictor for any boolean `classes`.
+Often, `y` will be the output of calling `predict` on a fitted logistic 
+model, for example. The example code below should be pretty self-explanatory.
+
+## ROC Curve
+
+```{r, fig.align='center'}
+roc.df = roc(y, classes)
+plot(roc.df$FPR, roc.df$TPR, type="l", xlab="FPR", ylab="TPR")
+```
+
+## Cost Function
+
+```{r, fig.show='hold'}
+roc.df$cost.1 = cost(roc.df$FPR, roc.df$TPR)
+roc.df$cost.2 = cost(roc.df$FPR, roc.df$TPR, 3)
+plot(roc.df$t, roc.df$cost.1, type="l")
+plot(roc.df$t, roc.df$cost.2, type="l")
+```
+

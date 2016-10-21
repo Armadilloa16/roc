@@ -10,3 +10,6 @@ Depends:
 License: GPL-3 | file LICENSE
 LazyData: TRUE
 RoxygenNote: 5.0.1
+Suggests: knitr,
+    rmarkdown
+VignetteBuilder: knitr
