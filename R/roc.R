@@ -40,30 +40,36 @@
 #'      \code{-Inf} (all others are half-open).
 #'   }
 #' @examples
-#' roc(c(1, 2, 3, 4, 4, 5), c(FALSE, TRUE, FALSE, FALSE, TRUE, TRUE))
+#' roc(c(1, 2, 3, 4, 4, 5), c(FALSE, FALSE, FALSE, TRUE, FALSE, TRUE))
 #' @export
 roc = function(y, classes){
   # Check inputs
   if (!is.vector(y, mode="numeric")){
-    stop(paste("roc: invalid input: ", y, "is not a numeric vector."))
+    stop(paste("roc::roc: invalid input: ", toString(y),
+               "is not a numeric vector."))
   }
   if (!is.vector(classes,mode="logical")){
-    stop(paste("roc: invalid input: ", classes, "is not a boolean vector."))
+    stop(paste("roc::roc: invalid input: ", toString(classes),
+               "is not a boolean vector."))
   }
   if (length(y) != length(classes)){
-    stop(paste("error: roc: inputs are of unequal length."))
+    stop(paste("roc::roc: inputs are of unequal length."))
+  }
+  if (length(y) == 0){
+    warning("roc::roc: empty inputs.")
+    return(data.frame())
   }
 
   # remove NA and NaN values.
   l = (is.na(y) | is.na(classes))
   nr = sum(l)
   if (nr == length(y)){
-    warning("roc: all entries are NA.")
+    warning("roc::roc: all entries of input are NA.")
     return(data.frame())
   } else if (nr > 0){
     y = y[!l]
     classes = classes[!l]
-    warning(paste("roc:", toString(nr), "invalid entries removed."))
+    warning(paste("roc::roc:", toString(nr), "invalid entries removed."))
   }
 
   # Sort
@@ -96,26 +102,31 @@ roc = function(y, classes){
 #'   in \code{fpr}.
 #' @return The AUC.
 #' @examples
-#' roc.df = roc(c(1, 2, 3, 4, 4, 5), c(FALSE, TRUE, FALSE, FALSE, TRUE, TRUE))
+#' roc.df = roc(c(1, 2, 3, 4, 4, 5), c(FALSE, FALSE, FALSE, TRUE, FALSE, TRUE))
 #' auc(roc.df$FPR, roc.df$TPR)
 #' @export
 auc = function(fpr, tpr){
   if (!is.vector(fpr, mode="numeric")){
-    stop(paste("roc: invalid input: ", fpr, "is not a numeric vector."))
+    stop(paste("roc::auc: invalid input: ", toString(fpr),
+               "is not a numeric vector."))
   }
   if (sum(fpr > 1 | fpr < 0) > 0){
-    stop(paste("roc: invalid input: ", fpr, "contains invalid values."))
+    stop(paste("roc::auc: invalid input: ", toString(fpr),
+               "contains invalid values."))
   }
   if (!is.vector(tpr, mode="numeric")){
-    stop(paste("roc: invalid input: ", tpr, "is not a numeric vector."))
+    stop(paste("roc::auc: invalid input: ", toString(tpr),
+               "is not a numeric vector."))
   }
   if (sum(tpr > 1 | tpr < 0) > 0){
-    stop(paste("roc: invalid input: ", tpr, "contains invalid values."))
+    stop(paste("roc::auc: invalid input: ", toString(tpr),
+               "contains invalid values."))
   }
   if (length(fpr) != length(tpr)){
-    stop(paste("roc: inputs are of unequal length."))
+    stop(paste("roc::auc: inputs are of unequal length."))
   }
-  # TODO: Add checks on fp.weight? Seems excessive.
+  # TODO: Could add checks for including (0,0) and (1,1), or add them if they
+  #   are missing. Not sure, but that is probably appropriate here?
 
   o = order(fpr,tpr)
   fpr = fpr[o]
@@ -141,26 +152,31 @@ auc = function(fpr, tpr){
 #'   as a false negative, a value of 0.5 would indicate it is half as bad.
 #' @return A vector of costs.
 #' @examples
-#' roc.df = roc(c(1, 2, 3, 4, 4, 5), c(FALSE, TRUE, FALSE, FALSE, TRUE, TRUE))
+#' roc.df = roc(c(1, 2, 3, 4, 4, 5), c(FALSE, FALSE, FALSE, TRUE, FALSE, TRUE))
 #' cost(roc.df$FPR, roc.df$TPR)
 #' cost(roc.df$FPR, roc.df$TPR, 2)
 #' @export
 cost = function(fpr, tpr, fp.weight = 1){
   if (!is.vector(fpr, mode="numeric")){
-    stop(paste("roc: invalid input: ", fpr, "is not a numeric vector."))
+    stop(paste("roc::cost: invalid input: ", toString(fpr),
+               "is not a numeric vector."))
   }
   if (sum(fpr > 1 | fpr < 0) > 0){
-    stop(paste("roc: invalid input: ", fpr, "contains invalid values."))
+    stop(paste("roc::cost: invalid input: ", toString(fpr),
+               "contains invalid values."))
   }
   if (!is.vector(tpr, mode="numeric")){
-    stop(paste("roc: invalid input: ", tpr, "is not a numeric vector."))
+    stop(paste("roc::cost: invalid input: ", toString(tpr),
+               "is not a numeric vector."))
   }
   if (sum(tpr > 1 | tpr < 0) > 0){
-    stop(paste("roc: invalid input: ", tpr, "contains invalid values."))
+    stop(paste("roc::cost: invalid input: ", toString(tpr),
+               "contains invalid values."))
   }
   if (length(fpr) != length(tpr)){
-    stop(paste("roc: inputs are of unequal length."))
+    stop(paste("roc::cost: inputs are of unequal length."))
   }
+  # TODO: Add checks on fp.weight? Seems excessive.
 
   return((fp.weight*fpr + (1 - tpr)) / (fp.weight + 1))
 }

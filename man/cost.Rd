@@ -33,7 +33,7 @@ Arguments \code{fpr} and \code{tpr} must contain only values between
 Otherwise, \code{cost} will throw an appropriate error.
 }
 \examples{
-roc.df = roc(c(1, 2, 3, 4, 4, 5), c(FALSE, TRUE, FALSE, FALSE, TRUE, TRUE))
+roc.df = roc(c(1, 2, 3, 4, 4, 5), c(FALSE, FALSE, FALSE, TRUE, FALSE, TRUE))
 cost(roc.df$FPR, roc.df$TPR)
 cost(roc.df$FPR, roc.df$TPR, 2)
 }

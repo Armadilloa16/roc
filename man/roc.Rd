@@ -37,6 +37,6 @@ values are correctly handled, which is one point of pedantry many
 other implementations fail to satisfy.
 }
 \examples{
-roc(c(1, 2, 3, 4, 4, 5), c(FALSE, TRUE, FALSE, FALSE, TRUE, TRUE))
+roc(c(1, 2, 3, 4, 4, 5), c(FALSE, FALSE, FALSE, TRUE, FALSE, TRUE))
 }
 
