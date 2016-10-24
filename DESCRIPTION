@@ -1,7 +1,7 @@
 Package: roc
 Type: Package
 Title: Receiver Operating Characteristic (ROC)
-Version: 0.1.0
+Version: 0.1.0.9000
 Authors@R: person("Lyron", "Winderbaum", email = "lyron.winderbaum@adelaide.edu.au", role = c("aut", "cre"))
 Description: A simple, minimal, implementation of ROC curves, AUC values, and
     cost functions.
